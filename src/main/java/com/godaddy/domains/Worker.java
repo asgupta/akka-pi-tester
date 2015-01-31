@@ -1,6 +1,8 @@
 package com.godaddy.domains;
 
 import akka.actor.UntypedActor;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import com.godaddy.domains.message.Result;
 import com.godaddy.domains.message.Work;
 
@@ -10,9 +12,12 @@ import com.godaddy.domains.message.Work;
  * Purpose:: This file is supposed to be a foo bar
  */
 public class Worker extends UntypedActor {
+
+    LoggingAdapter log = Logging.getLogger(getContext().system(), this);
     @Override
     public void onReceive(Object message) throws Exception {
         if (message instanceof Work) {
+            log.debug("Work received " + ((Work) message).getStart());
             Work work = (Work) message;
             double result = calculatePiFor(work.getStart(), work.getNrOfElements());
       //    System.out.println("Result " + result);
@@ -28,7 +33,6 @@ public class Worker extends UntypedActor {
         double acc = 0.0;
         for (int i = start * nrOfElements; i <= ((start + 1) * nrOfElements - 1); i++) {
             acc += 4.0 * (1 - (i % 2) * 2) / (2 * i + 1);
-            
         }
    //     System.out.println("sec" + acc);
         return acc;

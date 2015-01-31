@@ -3,6 +3,8 @@ package com.godaddy.domains;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import akka.routing.RoundRobinPool;
 import com.godaddy.domains.message.Calculate;
 import com.godaddy.domains.message.PiApproximation;
@@ -20,6 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Master extends UntypedActor {
 
+    LoggingAdapter log = Logging.getLogger(getContext().system(), this);
     private final int nrOfMessages;
     private final int nrOfElements;
 
@@ -34,7 +37,7 @@ public class Master extends UntypedActor {
         this.nrOfMessages = nrOfMessages;
         this.nrOfElements = nrOfElements;
         this.listener = listener;
-
+        log.info("Master started with " +nrOfMessages + " messages and workers:: "+nrOfWorkers);
         workerRouter =  getContext().actorOf(new RoundRobinPool(nrOfWorkers).props(Props.create(Worker.class)),
                 "workerRouter");
     }
@@ -54,9 +57,12 @@ public class Master extends UntypedActor {
             if (nrOfResults == nrOfMessages) {
                 // Send the result to the listener
                 Duration duration = Duration.create(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+                log.info("Sending the final result to the listener");
                 listener.tell(new PiApproximation(pi, duration), getSelf());
                 // Stops this actor and all its supervised children
-                getContext().stop(getSelf());
+                log.info("Stopping the actor and its children in round robin");
+              //  getContext().stop(getSelf());
+
             }
         } else {
             unhandled(message);
