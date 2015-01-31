@@ -15,7 +15,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Author:: agupta
  * Date:: 1/30/2015
- * Purpose:: This file is supposed to be a foo bar
+ * Purpose:: Master gets two types of message
+ * Worker and Result.. *
  */
 public class Master extends UntypedActor {
 
@@ -43,6 +44,7 @@ public class Master extends UntypedActor {
 
         if (message instanceof Calculate) {
             for (int start = 0; start < nrOfMessages; start++) {
+                //if the no. of m
                 workerRouter.tell(new Work(start, nrOfElements), getSelf());
             }
         } else if (message instanceof Result) {

@@ -15,7 +15,7 @@ public class Worker extends UntypedActor {
         if (message instanceof Work) {
             Work work = (Work) message;
             double result = calculatePiFor(work.getStart(), work.getNrOfElements());
-            System.out.println("Result " + result);
+      //    System.out.println("Result " + result);
             getSender().tell(new Result(result), getSelf());
         } else {
             System.out.println("Unhandled");
@@ -30,7 +30,7 @@ public class Worker extends UntypedActor {
             acc += 4.0 * (1 - (i % 2) * 2) / (2 * i + 1);
             
         }
-        System.out.println("sec" + acc);
+   //     System.out.println("sec" + acc);
         return acc;
     }
 

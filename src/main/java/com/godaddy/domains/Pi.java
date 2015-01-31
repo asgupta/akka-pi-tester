@@ -11,6 +11,7 @@ import akka.actor.Props;
 import com.godaddy.domains.message.Calculate;
 
 public class Pi {
+    
     public static void main(String[] args) {
         Pi pi = new Pi();
         pi.calculate(5, 10000, 10000);
@@ -27,6 +28,9 @@ public class Pi {
         ActorRef master = system.actorOf(Props.create(Master.class, nrOfWorkers, nrOfMessages, nrOfElements, listener), "master");
 
         // start the calculation
+        //calculate is the message which gets sent 
+        //no sender is the actor to who the message gets sent...
+        
         master.tell(new Calculate(), ActorRef.noSender());
 
         
